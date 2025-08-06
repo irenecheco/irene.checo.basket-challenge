@@ -2,9 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class ShootingPos
+{
+    public Transform ShootingPosTransform;
+    public float MaxForce;
+}
+
 public class ShotPositionManager : MonoBehaviour
 {
-    [SerializeField] private List<Transform> ShootingPositions = new List<Transform>();
+    [SerializeField] private List<ShootingPos> ShootingPositions = new List<ShootingPos>();
     [SerializeField] private GameObject MainCamera;
     [SerializeField] private ShotManager shotManager;
 
@@ -22,11 +29,11 @@ public class ShotPositionManager : MonoBehaviour
         {
             _currentPos = Random.Range(0, ShootingPositions.Count);
         }
-        MainCamera.transform.position = new Vector3(ShootingPositions[_currentPos].position.x, MainCamera.transform.position.y, ShootingPositions[_currentPos].position.z);
-        MainCamera.transform.rotation = ShootingPositions[_currentPos].rotation;
+        MainCamera.transform.position = new Vector3(ShootingPositions[_currentPos].ShootingPosTransform.position.x, MainCamera.transform.position.y, ShootingPositions[_currentPos].ShootingPosTransform.position.z);
+        MainCamera.transform.rotation = ShootingPositions[_currentPos].ShootingPosTransform.rotation;
 
         _previousPos = _currentPos;
 
-        shotManager.SpawnBall();
+        shotManager.SpawnBall(ShootingPositions[_previousPos].MaxForce);
     }
 }
