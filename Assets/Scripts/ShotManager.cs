@@ -20,16 +20,16 @@ public class ShotManager : MonoBehaviour
     [SerializeField] private Transform backboardTransform;
     [SerializeField] private float arcHeight = 2.5f;
     [SerializeField] private float launchAngle = 45f; // ⬅️ This replaces arcHeight
-    [SerializeField] private ShotPositionManager shotPosManager;
+    [SerializeField] private ScoringSystem scoringSystem;
+    [SerializeField] private InputHandler inputHandler;
 
     private GameObject currentBall;
     private Rigidbody ballRb;
     private bool shotInProgress = false;
     private float maxForce = 8f;
 
-    public void Shoot(float _normalizedPower, ShotType _shotType)
+    public void Shoot(ShotType _shotType)
     {
-        Debug.Log("enter shoot");
         if (shotInProgress) return;
 
         Vector3 _targetPos = new Vector3();
@@ -208,8 +208,9 @@ public class ShotManager : MonoBehaviour
                 Destroy(currentBall);
                 currentBall = null;
                 shotInProgress = false;
+                inputHandler.ResetInputs();
 
-                shotPosManager.ChangePos();
+                scoringSystem.ResetBall();
             }
         }
     }
@@ -219,8 +220,6 @@ public class ShotManager : MonoBehaviour
         yield return null;
         ballRb.velocity = force;
         //ballRb.AddForce(force, ForceMode.Impulse);
-        Debug.Log($"Force applied: {force}");
-        Debug.Log($"Velocity: {ballRb.velocity}");
 
         shotInProgress = true;
 

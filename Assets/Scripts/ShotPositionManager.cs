@@ -36,6 +36,11 @@ public class ShotPositionManager : MonoBehaviour
 
         _previousPos = _currentPos;
 
+        Spawn();
+    }
+
+    public void Spawn()
+    {
         shotManager.SpawnBall(ShootingPositions[_previousPos].MaxForce);
     }
 }
