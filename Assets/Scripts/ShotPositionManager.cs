@@ -32,6 +32,8 @@ public class ShotPositionManager : MonoBehaviour
         MainCamera.transform.position = new Vector3(ShootingPositions[_currentPos].ShootingPosTransform.position.x, MainCamera.transform.position.y, ShootingPositions[_currentPos].ShootingPosTransform.position.z);
         MainCamera.transform.rotation = ShootingPositions[_currentPos].ShootingPosTransform.rotation;
 
+        Debug.Log($"current position is {ShootingPositions[_currentPos].ShootingPosTransform.gameObject.name}");
+
         _previousPos = _currentPos;
 
         shotManager.SpawnBall(ShootingPositions[_previousPos].MaxForce);

@@ -59,7 +59,7 @@ public class InputHandler : MonoBehaviour
 
         if (_verticalSwipeLength < minSwipeThreshold) return;
 
-        shotManager.Shoot(_normalizedPower, ShotType.Backboard);
+        shotManager.Shoot(_normalizedPower, ShotType.LongMiss);
 
         //shotManager.Shoot(_normalizedPower);        
     }

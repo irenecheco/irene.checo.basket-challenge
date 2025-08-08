@@ -8,7 +8,8 @@ public enum ShotType
     Backboard,
     Rim,
     Miss,
-    BackboardMiss
+    BackboardMiss,
+    LongMiss
 }
 
 public class ShotManager : MonoBehaviour
@@ -38,27 +39,11 @@ public class ShotManager : MonoBehaviour
             case ShotType.Clean:
                 _targetPos = basketTransform.position;
                 break;
+
             case ShotType.Backboard:
-                Vector3 rimPos = basketTransform.position;
-                Vector3 toRim = rimPos - currentBall.transform.position;
-
-                Vector3 backboardNormal = -basketTransform.forward;
-
-                Vector3 reflected = Vector3.Reflect(toRim.normalized, backboardNormal);
-
-                // Adjust how far back you aim
-                float depthBehindRim = -0.5f; // decrease for side shots
-                float verticalOffset = 0.25f;
-
-                // Tweak lateral offset based on angle
-                Vector3 lateralOffset = Vector3.Cross(Vector3.up, backboardNormal).normalized;
-                float sideOffset = Vector3.Dot(toRim.normalized, lateralOffset);
-                lateralOffset *= sideOffset * 0.25f; // Scale the lateral shift
-
-                Vector3 target = rimPos + reflected * depthBehindRim + lateralOffset;
-                target.y = rimPos.y + verticalOffset;
-                _targetPos = target;
+                _targetPos = CalculateBackboardPos();
                 break;
+
             case ShotType.Rim:
                 float rimRadius = 0.14f; // example rim radius in meters
                 Vector3 rimOffset = new Vector3(
@@ -79,28 +64,44 @@ public class ShotManager : MonoBehaviour
 
                 _targetPos = basketTransform.position + rimOffset; // random rim offset
                 break;
+
             case ShotType.BackboardMiss:
-                //set target pos
+
+                float xMiss = Random.value < 0.5f
+                ? Random.Range(-0.5f, -0.3f)
+                : Random.Range(0.3f, 0.5f); // either far left or far right
+
+                float yMiss = Random.Range(0.2f, 0.4f); // always high
+
+                Vector3 missOffset = new Vector3(xMiss, yMiss, 0);
+
+                Debug.Log($"miss offset is {missOffset}");
+                _targetPos = CalculateBackboardPos() + missOffset;
                 break;
+
             case ShotType.Miss:
                 Vector3 shortOffset = new Vector3(
-                Random.Range(-0.7f, 0.7f),
-                Random.Range(-1.0f, 0),
-                Random.Range(-0.7f, 0.7f));
-
-                while(Mathf.Abs(shortOffset.x) < 0.4f || Mathf.Abs(shortOffset.y) < 0.4f 
-                    || Mathf.Abs(shortOffset.z) < 0.4f || Mathf.Abs(shortOffset.x) == Mathf.Abs(shortOffset.y)
-                    || Mathf.Abs(shortOffset.y) == Mathf.Abs(shortOffset.z) || Mathf.Abs(shortOffset.x) == Mathf.Abs(shortOffset.z))
-                {
-                    shortOffset = new Vector3(
-                    Random.Range(-0.6f, 0.6f),
-                    Random.Range(-1.0f, 0),
-                    Random.Range(-0.6f, 0.6f));
-                }
+                Random.Range(-0.5f, 0.5f),
+                Random.Range(-1.2f, -0.6f),
+                Random.Range(-1.0f, -0.6f));
 
                 _targetPos = basketTransform.position + shortOffset; // short or side miss
                 break;
+
+            case ShotType.LongMiss:
+                // offset to push shot too far
+                Vector3 longMissOffset = new Vector3(
+                    Random.Range(-0.3f, 0.3f),     // small horizontal variation
+                    Random.Range(0.3f, 0.7f),      // definitely high
+                    Random.Range(0.5f, 1f)       // definitely deep (goes past board)
+                );
+
+                // final target position
+                _targetPos = basketTransform.position + longMissOffset;
+                break;
+
             default:
+                _targetPos = basketTransform.position;
                 break;
         }
 
@@ -166,6 +167,30 @@ public class ShotManager : MonoBehaviour
         velocity.y = initialSpeed * Mathf.Sin(angleRad);
 
         return velocity;
+    }
+
+    public Vector3 CalculateBackboardPos()
+    {
+        Vector3 _rimPos = basketTransform.position;
+        Vector3 _toRim = _rimPos - currentBall.transform.position;
+
+        Vector3 _backboardNormal = -basketTransform.forward;
+
+        Vector3 _reflected = Vector3.Reflect(_toRim.normalized, _backboardNormal);
+
+        // Adjust how far back you aim
+        float _depthBehindRim = -0.5f; // decrease for side shots
+        float _verticalOffset = 0.25f;
+
+        // Tweak lateral offset based on angle
+        Vector3 _lateralOffset = Vector3.Cross(Vector3.up, _backboardNormal).normalized;
+        float _sideOffset = Vector3.Dot(_toRim.normalized, _lateralOffset);
+        _lateralOffset *= _sideOffset * 0.25f; // Scale the lateral shift
+
+        Vector3 _backboardTarget = _rimPos + _reflected * _depthBehindRim + _lateralOffset;
+        _backboardTarget.y = _rimPos.y + _verticalOffset;
+
+        return _backboardTarget;
     }
 
     public void SpawnBall(float _maxForce)
