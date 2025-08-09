@@ -23,8 +23,6 @@ public class InputHandler : MonoBehaviour
     [SerializeField] private float swipeMaxTime = 2f;
     [SerializeField] private TextMeshProUGUI debugText;
 
-    
-
     public Vector2 SwipeStart { get; private set; }
     public Vector2 SwipeEnd { get; private set; }
     public bool IsSwiping { get; private set;  }
@@ -34,6 +32,8 @@ public class InputHandler : MonoBehaviour
     private float minSwipeThreshold;
     private bool swipeTimerOn;
     private float remainingSwipeTime = 0;
+    private float maxYDuringSwipe;
+    private bool reachedPeak;
 
     private void Awake()
     {
@@ -46,7 +46,6 @@ public class InputHandler : MonoBehaviour
     {
         inputActions.Player.TouchPress.started += OnTouchStart;
         inputActions.Player.TouchPress.canceled += OnTouchEnd;
-        inputActions.Enable();
     }
 
     private void OnDisable()
@@ -56,6 +55,24 @@ public class InputHandler : MonoBehaviour
 
     private void Update()
     {
+        if (!IsSwiping) return;
+
+        Vector2 currentPos = inputActions.Player.TouchPosition.ReadValue<Vector2>();
+
+        // Update peak height
+        if (currentPos.y > maxYDuringSwipe)
+        {
+            maxYDuringSwipe = currentPos.y;
+            reachedPeak = true;
+        }
+
+        // Detect downward movement after peak
+        if (reachedPeak && currentPos.y < maxYDuringSwipe - 10f) // 10px tolerance
+        {
+            HandleSwipeEnd();
+            return;
+        }
+
         if (swipeTimerOn)
         {
             if(remainingSwipeTime > 0)
@@ -64,7 +81,6 @@ public class InputHandler : MonoBehaviour
             }
             else
             {
-                swipeTimerOn = false;
                 HandleSwipeEnd();
             }            
         }
@@ -76,6 +92,9 @@ public class InputHandler : MonoBehaviour
         IsSwiping = true;
         remainingSwipeTime = swipeMaxTime;
         swipeTimerOn = true;
+
+        maxYDuringSwipe = SwipeStart.y;
+        reachedPeak = false;
     }
 
     private void OnTouchEnd(InputAction.CallbackContext _context)
@@ -85,6 +104,7 @@ public class InputHandler : MonoBehaviour
 
     private void HandleSwipeEnd()
     {
+        swipeTimerOn = false;
         SwipeEnd = inputActions.Player.TouchPosition.ReadValue<Vector2>();
         IsSwiping = false;
 

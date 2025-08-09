@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public enum GameState
 {
@@ -17,18 +19,21 @@ public class GameManager : MonoBehaviour
 
     public GameState CurrentState { get; private set; }
 
-    private float gameTimer;
+    public float GameTimer;
+    public float FinalScore;
 
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
     {
         SetState(GameState.StartScreen);
-        gameTimer = totalGameTime;
+        GameTimer = totalGameTime;
     }
 
     private void Update()
@@ -41,30 +46,49 @@ public class GameManager : MonoBehaviour
 
     private void HandleTimer()
     {
-        gameTimer -= Time.deltaTime;
+        GameTimer -= Time.deltaTime;
 
-        if(gameTimer <= 0f)
+        if (GameTimer <= 0f)
         {
             EndGame();
         }
     }
 
+    public void StartCountdown()
+    {
+        Debug.Log("inizia countdown");
+        SceneManager.LoadScene("Gameplay");
+        GameTimer = totalGameTime;
+        SetState(GameState.Countdown);
+        //in game UI
+    }
+
     public void StartGame()
     {
-        gameTimer = totalGameTime;
         SetState(GameState.Playing);
-        //in game UI
     }
 
     public void EndGame()
     {
+        SceneManager.LoadScene("FinalMenu");
         SetState(GameState.GameOver);
         //end screen UI
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene("StartMenu");
+        SetState(GameState.StartScreen);
     }
 
     public void SetState(GameState newState)
     {
         CurrentState = newState;
+    }
+
+    public void SetGameTime(int _index)
+    {
+        totalGameTime = 60 * (_index+1);
     }
 
     public bool IsGameActive()
