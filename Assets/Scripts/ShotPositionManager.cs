@@ -29,8 +29,8 @@ public class ShotPositionManager : MonoBehaviour
         {
             _currentPos = Random.Range(0, ShootingPositions.Count);
         }
-        MainCamera.transform.position = new Vector3(ShootingPositions[_currentPos].ShootingPosTransform.position.x, MainCamera.transform.position.y, ShootingPositions[_currentPos].ShootingPosTransform.position.z);
-        MainCamera.transform.rotation = ShootingPositions[_currentPos].ShootingPosTransform.rotation;
+        //MainCamera.transform.position = new Vector3(ShootingPositions[_currentPos].ShootingPosTransform.position.x, 1.9f, ShootingPositions[_currentPos].ShootingPosTransform.position.z);
+        //MainCamera.transform.rotation = ShootingPositions[_currentPos].ShootingPosTransform.rotation;
 
         Debug.Log($"current position is {ShootingPositions[_currentPos].ShootingPosTransform.gameObject.name}");
 
@@ -41,6 +41,8 @@ public class ShotPositionManager : MonoBehaviour
 
     public void Spawn()
     {
+        MainCamera.transform.position = new Vector3(ShootingPositions[_previousPos].ShootingPosTransform.position.x, 1.9f, ShootingPositions[_previousPos].ShootingPosTransform.position.z);
+        MainCamera.transform.rotation = ShootingPositions[_previousPos].ShootingPosTransform.rotation;
         shotManager.SpawnBall(ShootingPositions[_previousPos].MaxForce);
     }
 }

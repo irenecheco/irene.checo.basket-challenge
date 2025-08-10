@@ -7,6 +7,7 @@ public class CountdownManager : MonoBehaviour
 {
     [SerializeField] private GameObject timer;
     [SerializeField] private GameObject score;
+    [SerializeField] private GameObject inputBarCanvas;
     [SerializeField] private GameObject countdownObj;
     [SerializeField] private TextMeshProUGUI countdownText;
     [SerializeField] private InputHandler inputHandler;
@@ -24,6 +25,7 @@ public class CountdownManager : MonoBehaviour
     {
         timer.SetActive(true);
         score.SetActive(true);
+        inputBarCanvas.SetActive(true);
         countdownObj.SetActive(false);
         inputHandler.ResetInputs();
         GameManager.Instance.StartGame();

@@ -56,7 +56,6 @@ public class GameManager : MonoBehaviour
 
     public void StartCountdown()
     {
-        Debug.Log("inizia countdown");
         SceneManager.LoadScene("Gameplay");
         GameTimer = totalGameTime;
         SetState(GameState.Countdown);

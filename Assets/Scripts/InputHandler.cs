@@ -8,7 +8,7 @@ using TMPro;
 public class InputHandler : MonoBehaviour
 {
     [Header("Swipe ratios")]
-    [SerializeField, Range(0.5f, 1f)] private float maxSwipeHeightRatio = 0.75f;
+    [SerializeField, Range(0.5f, 1f)] private float maxSwipeHeightRatio = 0.65f;
     [SerializeField, Range(0f, 0.5f)] private float minSwipeHeightRatio = 0.1f;
 
     [Header("Shot Outcome Thresholds")]
@@ -22,6 +22,7 @@ public class InputHandler : MonoBehaviour
     [SerializeField] private ShotManager shotManager;
     [SerializeField] private float swipeMaxTime = 2f;
     [SerializeField] private TextMeshProUGUI debugText;
+    [SerializeField] private UiInputBar inputBar;
 
     public Vector2 SwipeStart { get; private set; }
     public Vector2 SwipeEnd { get; private set; }
@@ -56,6 +57,8 @@ public class InputHandler : MonoBehaviour
     private void Update()
     {
         if (!IsSwiping) return;
+
+        inputBar.SetForce(ComputeForce());
 
         Vector2 currentPos = inputActions.Player.TouchPosition.ReadValue<Vector2>();
 
@@ -117,6 +120,15 @@ public class InputHandler : MonoBehaviour
         inputActions.Disable();
 
         shotManager.Shoot(DetermineShotType(_normalizedPower));
+    }
+    
+    private float ComputeForce()
+    {
+        SwipeEnd = inputActions.Player.TouchPosition.ReadValue<Vector2>();
+        Vector2 _swipeDelta = SwipeEnd - SwipeStart;
+        float _verticalSwipeLength = Mathf.Max(0f, _swipeDelta.y);
+        float _normalizedPower = Mathf.Clamp01(_verticalSwipeLength / maxSwipeHeight);
+        return _normalizedPower;
     }
 
     public void ResetInputs()

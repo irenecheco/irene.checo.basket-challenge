@@ -22,6 +22,7 @@ public class ShotManager : MonoBehaviour
     [SerializeField] private float launchAngle = 45f; // ⬅️ This replaces arcHeight
     [SerializeField] private ScoringSystem scoringSystem;
     [SerializeField] private InputHandler inputHandler;
+    [SerializeField] private CameraFollowBall cameraFollowBall;
 
     private GameObject currentBall;
     private Rigidbody ballRb;
@@ -122,6 +123,7 @@ public class ShotManager : MonoBehaviour
 
         Debug.Log($"direction is {_direction}");*/
 
+        cameraFollowBall.StartFollowing();
         ballRb.isKinematic = false;
         ballRb.WakeUp();
         ballRb.velocity = velocity;
@@ -196,6 +198,7 @@ public class ShotManager : MonoBehaviour
     public void SpawnBall(float _maxForce)
     {
         currentBall = Instantiate(ballPrefab, ballPosition.position, Quaternion.identity);
+        cameraFollowBall.Ball = currentBall.transform;
         maxForce = _maxForce;
     }
 
@@ -218,6 +221,7 @@ public class ShotManager : MonoBehaviour
     private IEnumerator ApplyForceNextFrame(Vector3 force)
     {
         yield return null;
+        cameraFollowBall.StartFollowing();
         ballRb.velocity = force;
         //ballRb.AddForce(force, ForceMode.Impulse);
 

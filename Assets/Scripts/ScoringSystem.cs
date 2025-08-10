@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class ScoringSystem : MonoBehaviour
 {
     [SerializeField] private ShotPositionManager shotPositionManager;
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private UiInputBar inputBar;
     private bool rimTouched = false;
     private bool backboardTouched = false;
     private bool scored = false;
@@ -64,6 +66,7 @@ public class ScoringSystem : MonoBehaviour
         rimTouched = false;
         backboardTouched = false;
         scored = false;
+        inputBar.SetForce(0f);
     }
 
 }
