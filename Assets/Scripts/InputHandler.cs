@@ -9,17 +9,26 @@ public class InputHandler : MonoBehaviour
 {
     [Header("Swipe ratios")]
     [SerializeField, Range(0.5f, 1f)] private float maxSwipeHeightRatio = 0.65f;
-    [SerializeField, Range(0f, 0.5f)] private float minSwipeHeightRatio = 0.1f;
+    [SerializeField, Range(0f, 0.5f)] private float minSwipeHeightRatio = 0.01f;
 
-    [Header("Shot Outcome Thresholds")]
-    [SerializeField, Range(0f, 1f)] private float missMaxThreshold = 0.35f;
-    [SerializeField, Range(0f, 1f)] private float cleanMinThreshold = 0.45f;
-    [SerializeField, Range(0f, 1f)] private float cleanMaxThreshold = 0.60f;
-    [SerializeField, Range(0f, 1f)] private float backboardMissMinThreshold = 0.70f;
-    [SerializeField, Range(0f, 1f)] private float backboardMinThreshold = 0.80f;
-    [SerializeField, Range(0f, 1f)] private float backboardMaxThreshold = 0.95f;
+    [Header("Inner Shot Outcome Thresholds")]
+    [SerializeField, Range(0f, 1f)] public float missMaxThreshold = 0.35f;
+    [SerializeField, Range(0f, 1f)] public float cleanMinThreshold = 0.45f;
+    [SerializeField, Range(0f, 1f)] public float cleanMaxThreshold = 0.60f;
+    [SerializeField, Range(0f, 1f)] public float backboardMissMinThreshold = 0.70f;
+    [SerializeField, Range(0f, 1f)] public float backboardMinThreshold = 0.80f;
+    [SerializeField, Range(0f, 1f)] public float backboardMaxThreshold = 0.95f;
+
+    [Header("Outer Shot Outcome Thresholds")]
+    [SerializeField, Range(0f, 1f)] public float missMaxThresholdOut = 0.35f;
+    [SerializeField, Range(0f, 1f)] public float cleanMinThresholdOut = 0.45f;
+    [SerializeField, Range(0f, 1f)] public float cleanMaxThresholdOut = 0.60f;
+    [SerializeField, Range(0f, 1f)] public float backboardMissMinThresholdOut = 0.70f;
+    [SerializeField, Range(0f, 1f)] public float backboardMinThresholdOut = 0.80f;
+    [SerializeField, Range(0f, 1f)] public float backboardMaxThresholdOut = 0.95f;
 
     [SerializeField] private ShotManager shotManager;
+    [SerializeField] private ShotPositionManager shotPositionManager;
     [SerializeField] private float swipeMaxTime = 2f;
     [SerializeField] private TextMeshProUGUI debugText;
     [SerializeField] private UiInputBar inputBar;
@@ -127,6 +136,7 @@ public class InputHandler : MonoBehaviour
         SwipeEnd = inputActions.Player.TouchPosition.ReadValue<Vector2>();
         Vector2 _swipeDelta = SwipeEnd - SwipeStart;
         float _verticalSwipeLength = Mathf.Max(0f, _swipeDelta.y);
+        if (_verticalSwipeLength < minSwipeThreshold) return 0f;
         float _normalizedPower = Mathf.Clamp01(_verticalSwipeLength / maxSwipeHeight);
         return _normalizedPower;
     }
@@ -138,48 +148,82 @@ public class InputHandler : MonoBehaviour
 
     private ShotType DetermineShotType(float _normalizedPower)
     {
-        if (_normalizedPower < missMaxThreshold)
+        if (shotPositionManager._previousPos <= 4) 
         {
-            Debug.Log("miss");
-            debugText.text = "miss";
-            return ShotType.Miss;
-        }            
-        else if (missMaxThreshold <= _normalizedPower && _normalizedPower < cleanMinThreshold)
+            if (_normalizedPower < missMaxThreshold)
+            {
+                Debug.Log("miss");
+                return ShotType.Miss;
+            }
+            else if (missMaxThreshold <= _normalizedPower && _normalizedPower < cleanMinThreshold)
+            {
+                Debug.Log("rim");
+                return ShotType.Rim;
+            }
+            else if (cleanMinThreshold <= _normalizedPower && _normalizedPower < cleanMaxThreshold)
+            {
+                Debug.Log("clean");
+                return ShotType.Clean;
+            }
+            else if (cleanMaxThreshold <= _normalizedPower && _normalizedPower < backboardMissMinThreshold)
+            {
+                Debug.Log("rim");
+                return ShotType.Rim;
+            }
+            else if (backboardMissMinThreshold <= _normalizedPower && _normalizedPower < backboardMinThreshold)
+            {
+                Debug.Log("backboard miss");
+                return ShotType.BackboardMiss;
+            }
+            else if (backboardMinThreshold <= _normalizedPower && _normalizedPower < backboardMaxThreshold)
+            {
+                Debug.Log("backboard");
+                return ShotType.Backboard;
+            }
+            else
+            {
+                Debug.Log("long miss");
+                return ShotType.LongMiss;
+            }
+        } else
         {
-            Debug.Log("rim");
-            debugText.text = "rim";
-            return ShotType.Rim;
-        }            
-        else if (cleanMinThreshold <= _normalizedPower && _normalizedPower < cleanMaxThreshold)
-        {
-            Debug.Log("clean");
-            debugText.text = "clean";
-            return ShotType.Clean;
-        }            
-        else if (cleanMaxThreshold <= _normalizedPower && _normalizedPower < backboardMissMinThreshold)
-        {
-            Debug.Log("rim");
-            debugText.text = "rim";
-            return ShotType.Rim;
-        }            
-        else if (backboardMissMinThreshold <= _normalizedPower && _normalizedPower < backboardMinThreshold)
-        {
-            Debug.Log("backboard miss");
-            debugText.text = "backboard miss";
-            return ShotType.BackboardMiss;
-        }            
-        else if (backboardMinThreshold <= _normalizedPower && _normalizedPower < backboardMaxThreshold)
-        {
-            Debug.Log("backboard");
-            debugText.text = "backboard";
-            return ShotType.Backboard;
+            if (_normalizedPower < missMaxThresholdOut)
+            {
+                Debug.Log("miss");
+                return ShotType.Miss;
+            }
+            else if (missMaxThresholdOut <= _normalizedPower && _normalizedPower < cleanMinThresholdOut)
+            {
+                Debug.Log("rim");
+                return ShotType.Rim;
+            }
+            else if (cleanMinThresholdOut <= _normalizedPower && _normalizedPower < cleanMaxThresholdOut)
+            {
+                Debug.Log("clean");
+                return ShotType.Clean;
+            }
+            else if (cleanMaxThresholdOut <= _normalizedPower && _normalizedPower < backboardMissMinThresholdOut)
+            {
+                Debug.Log("rim");
+                return ShotType.Rim;
+            }
+            else if (backboardMissMinThresholdOut <= _normalizedPower && _normalizedPower < backboardMinThresholdOut)
+            {
+                Debug.Log("backboard miss");
+                return ShotType.BackboardMiss;
+            }
+            else if (backboardMinThresholdOut <= _normalizedPower && _normalizedPower < backboardMaxThresholdOut)
+            {
+                Debug.Log("backboard");
+                return ShotType.Backboard;
+            }
+            else
+            {
+                Debug.Log("long miss");
+                return ShotType.LongMiss;
+            }
         }
-        else
-        {
-            Debug.Log("long miss");
-            debugText.text = "long miss";
-            return ShotType.LongMiss;
-        }            
+                    
     }
 
 

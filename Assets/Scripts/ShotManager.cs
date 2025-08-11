@@ -31,6 +31,7 @@ public class ShotManager : MonoBehaviour
 
     public void Shoot(ShotType _shotType)
     {
+        Debug.Log("entra in shoot");
         if (shotInProgress) return;
 
         Vector3 _targetPos = new Vector3();

@@ -14,8 +14,9 @@ public class ShotPositionManager : MonoBehaviour
     [SerializeField] private List<ShootingPos> ShootingPositions = new List<ShootingPos>();
     [SerializeField] private GameObject MainCamera;
     [SerializeField] private ShotManager shotManager;
+    [SerializeField] private UiInputBar uiInputBar;
 
-    private int _previousPos = 0;
+    public int _previousPos = 0;
 
     private void Start()
     {
@@ -35,6 +36,7 @@ public class ShotPositionManager : MonoBehaviour
         Debug.Log($"current position is {ShootingPositions[_currentPos].ShootingPosTransform.gameObject.name}");
 
         _previousPos = _currentPos;
+        if (GameManager.Instance.CurrentState == GameState.Playing) uiInputBar.SetBarRanges();
 
         Spawn();
     }

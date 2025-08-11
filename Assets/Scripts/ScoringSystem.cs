@@ -9,6 +9,7 @@ public class ScoringSystem : MonoBehaviour
     [SerializeField] private ShotPositionManager shotPositionManager;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private UiInputBar inputBar;
+    [SerializeField] private BackboardBonus backboardBonus;
     private bool rimTouched = false;
     private bool backboardTouched = false;
     private bool scored = false;
@@ -41,12 +42,36 @@ public class ScoringSystem : MonoBehaviour
         scored = true;
         if (rimTouched || backboardTouched)
         {
-            if(rimTouched) Debug.Log("rim score");
-            if(backboardTouched) Debug.Log("backboard score");
-            sessionScore += 2;
+            if (backboardTouched)
+            {
+                switch (backboardBonus.activeBonus)
+                {
+                    case BackboardBonusType.None:
+                        sessionScore += 2;
+                        break;
+                    case BackboardBonusType.Common:
+                        sessionScore += 4;
+                        backboardBonus.DisableBonus();
+                        break;
+                    case BackboardBonusType.Rare:
+                        sessionScore += 6;
+                        backboardBonus.DisableBonus();
+                        break;
+                    case BackboardBonusType.VeryRare:
+                        sessionScore += 8;
+                        backboardBonus.DisableBonus();
+                        break;
+                    default:
+                        sessionScore += 2;
+                        break;
+                }
+            } else
+            {
+                sessionScore += 2;
+            }            
+            
         } else
         {
-            Debug.Log("clean score");
             sessionScore += 3;
         }
         GameManager.Instance.FinalScore = sessionScore;
