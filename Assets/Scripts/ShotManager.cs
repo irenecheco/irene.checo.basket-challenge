@@ -209,25 +209,19 @@ public class ShotManager : MonoBehaviour
         {
             if(currentBall.transform.position.y < 0.2f)
             {
-                Destroy(currentBall);
-                currentBall = null;
-                shotInProgress = false;
-                inputHandler.ResetInputs();
-
-                scoringSystem.ResetBall();
+                StartCoroutine(WaitAndReset());
             }
         }
     }
 
-    private IEnumerator ApplyForceNextFrame(Vector3 force)
+    private IEnumerator WaitAndReset()
     {
-        yield return null;
-        cameraFollowBall.StartFollowing();
-        ballRb.velocity = force;
-        //ballRb.AddForce(force, ForceMode.Impulse);
+        yield return new WaitForSeconds(1f);
+        Destroy(currentBall);
+        currentBall = null;
+        shotInProgress = false;
+        inputHandler.ResetInputs();
 
-        shotInProgress = true;
-
-        //disable Inputs
+        scoringSystem.ResetBall();
     }
 }
