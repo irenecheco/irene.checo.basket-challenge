@@ -10,6 +10,7 @@ public class ScoringSystem : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private UiInputBar inputBar;
     [SerializeField] private BackboardBonus backboardBonus;
+    [SerializeField] private FireballBonus fireballBonus;
 
     [SerializeField] private Color perfectShotColor;
     [SerializeField] private Color normalShotColor;
@@ -47,6 +48,8 @@ public class ScoringSystem : MonoBehaviour
     public void ComputeScoreType()
     {
         scored = true;
+        int _scoreIncrease = 0;
+        bool _perfectShot = false;
         if (rimTouched || backboardTouched)
         {
             if (backboardTouched)
@@ -54,39 +57,37 @@ public class ScoringSystem : MonoBehaviour
                 switch (backboardBonus.activeBonus)
                 {
                     case BackboardBonusType.None:
-                        sessionScore += 2;
-                        pointsText.text = "+2 points";
+                        _scoreIncrease += 2;
                         bonusText.text = "";
                         pointsText.color = normalShotColor;
                         bonusText.color = normalShotColor;
                         break;
                     case BackboardBonusType.Common:
-                        sessionScore += 4;
-                        pointsText.text = "+4 points";
+                        _scoreIncrease += 4;
+                        _perfectShot = true;
                         bonusText.text = "Backboard bonus!";
                         pointsText.color = backboardBonusColor;
                         bonusText.color = backboardBonusColor;
                         backboardBonus.DisableBonus();
                         break;
                     case BackboardBonusType.Rare:
-                        sessionScore += 6;
-                        pointsText.text = "+6 points";
+                        _scoreIncrease += 6;
+                        _perfectShot = true;
                         bonusText.text = "Backboard bonus!";
                         pointsText.color = backboardBonusColor;
                         bonusText.color = backboardBonusColor;
                         backboardBonus.DisableBonus();
                         break;
                     case BackboardBonusType.VeryRare:
-                        sessionScore += 8;
-                        pointsText.text = "+8 points";
+                        _scoreIncrease += 8;
+                        _perfectShot = true;
                         bonusText.text = "Backboard bonus!";
                         pointsText.color = backboardBonusColor;
                         bonusText.color = backboardBonusColor;
                         backboardBonus.DisableBonus();
                         break;
                     default:
-                        sessionScore += 2;
-                        pointsText.text = "+2 points";
+                        _scoreIncrease += 2;
                         bonusText.text = "";
                         pointsText.color = normalShotColor;
                         bonusText.color = normalShotColor;
@@ -94,8 +95,7 @@ public class ScoringSystem : MonoBehaviour
                 }
             } else
             {
-                sessionScore += 2;
-                pointsText.text = "+2 points";
+                _scoreIncrease += 2;
                 bonusText.text = "";
                 pointsText.color = normalShotColor;
                 bonusText.color = normalShotColor;
@@ -103,12 +103,16 @@ public class ScoringSystem : MonoBehaviour
             
         } else
         {
-            sessionScore += 3;
-            pointsText.text = "+3 points";
+            _scoreIncrease += 3;
+            _perfectShot = true;
             bonusText.text = "Perfect shot!";
             pointsText.color = perfectShotColor;
             bonusText.color = perfectShotColor;
         }
+        if (fireballBonus.FireballActive) _scoreIncrease *= 2;
+        sessionScore += _scoreIncrease;
+        pointsText.text = $"+{_scoreIncrease} points";
+        fireballBonus.UpdateFireballBar(_perfectShot);
         feedbackCanvas.SetActive(true);
         GameManager.Instance.FinalScore = sessionScore;
         scoreText.text = sessionScore.ToString();

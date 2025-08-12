@@ -23,11 +23,13 @@ public class ShotManager : MonoBehaviour
     [SerializeField] private ScoringSystem scoringSystem;
     [SerializeField] private InputHandler inputHandler;
     [SerializeField] private CameraFollowBall cameraFollowBall;
+    [SerializeField] private FireballBonus fireballBonus;
 
     private GameObject currentBall;
     private Rigidbody ballRb;
     private bool shotInProgress = false;
     private float maxForce = 8f;
+    private bool reset = false;
 
     public void Shoot(ShotType _shotType)
     {
@@ -79,6 +81,7 @@ public class ShotManager : MonoBehaviour
 
                 Debug.Log($"miss offset is {missOffset}");
                 _targetPos = CalculateBackboardPos() + missOffset;
+                fireballBonus.ResetFireballBar();
                 break;
 
             case ShotType.Miss:
@@ -88,6 +91,7 @@ public class ShotManager : MonoBehaviour
                 Random.Range(-1.0f, -0.6f));
 
                 _targetPos = basketTransform.position + shortOffset; // short or side miss
+                fireballBonus.ResetFireballBar();
                 break;
 
             case ShotType.LongMiss:
@@ -100,6 +104,7 @@ public class ShotManager : MonoBehaviour
 
                 // final target position
                 _targetPos = basketTransform.position + longMissOffset;
+                fireballBonus.ResetFireballBar();
                 break;
 
             default:
@@ -129,6 +134,7 @@ public class ShotManager : MonoBehaviour
         ballRb.WakeUp();
         ballRb.velocity = velocity;
         shotInProgress = true;
+        Debug.Log($"shot in progress è {shotInProgress}");
 
         // Delay 1 frame to ensure isKinematic = false is applied
         //StartCoroutine(ApplyForceNextFrame(_direction * _force));
@@ -209,19 +215,25 @@ public class ShotManager : MonoBehaviour
         {
             if(currentBall.transform.position.y < 0.2f)
             {
-                StartCoroutine(WaitAndReset());
+                if (!reset)
+                {
+                    reset = true;
+                    Debug.Log($"entra e attiva coroutine wait and reset");
+                    StartCoroutine(WaitAndReset());
+                }                
             }
         }
     }
 
     private IEnumerator WaitAndReset()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
         Destroy(currentBall);
         currentBall = null;
         shotInProgress = false;
         inputHandler.ResetInputs();
 
         scoringSystem.ResetBall();
+        reset = false;
     }
 }

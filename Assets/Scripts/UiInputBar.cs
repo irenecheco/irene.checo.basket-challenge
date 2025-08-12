@@ -35,10 +35,10 @@ public class UiInputBar : MonoBehaviour
         cleanRangeOuterPos = new Vector3(cleanRangeInitialPos.x, cleanRangeInitialPos.y + (fillImageHeight * inputHandler.cleanMinThresholdOut), cleanRangeInitialPos.z);
         backboardRangeInnerPos = new Vector3(backboardRangeInitialPos.x, backboardRangeInitialPos.y + (fillImageHeight * inputHandler.backboardMinThreshold), backboardRangeInitialPos.z);
         backboardRangeOuterPos = new Vector3(backboardRangeInitialPos.x, backboardRangeInitialPos.y + (fillImageHeight * inputHandler.backboardMinThresholdOut), backboardRangeInitialPos.z);
-        cleanRangeInnerSize = new Vector2(50f, (inputHandler.cleanMaxThreshold - inputHandler.cleanMinThreshold) * fillImageHeight);
-        cleanRangeOuterSize = new Vector2(50f, (inputHandler.cleanMaxThresholdOut - inputHandler.cleanMinThresholdOut) * fillImageHeight);
-        backboardRangeInnerSize = new Vector2(50f, (inputHandler.backboardMaxThreshold - inputHandler.backboardMinThreshold) * fillImageHeight);
-        backboardRangeOuterSize = new Vector2(50f, (inputHandler.backboardMaxThresholdOut - inputHandler.backboardMinThresholdOut) * fillImageHeight);
+        cleanRangeInnerSize = new Vector2(35f, (inputHandler.cleanMaxThreshold - inputHandler.cleanMinThreshold) * fillImageHeight);
+        cleanRangeOuterSize = new Vector2(35f, (inputHandler.cleanMaxThresholdOut - inputHandler.cleanMinThresholdOut) * fillImageHeight);
+        backboardRangeInnerSize = new Vector2(35f, (inputHandler.backboardMaxThreshold - inputHandler.backboardMinThreshold) * fillImageHeight);
+        backboardRangeOuterSize = new Vector2(35f, (inputHandler.backboardMaxThresholdOut - inputHandler.backboardMinThresholdOut) * fillImageHeight);
         SetBarRanges();
     }
 

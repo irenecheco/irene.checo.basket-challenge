@@ -44,6 +44,7 @@ public class InputHandler : MonoBehaviour
     private float remainingSwipeTime = 0;
     private float maxYDuringSwipe;
     private bool reachedPeak;
+    private bool endedSwipe = false;
 
     private void Awake()
     {
@@ -81,8 +82,12 @@ public class InputHandler : MonoBehaviour
         // Detect downward movement after peak
         if (reachedPeak && currentPos.y < maxYDuringSwipe - 10f) // 10px tolerance
         {
-            HandleSwipeEnd();
-            return;
+            if (!endedSwipe)
+            {
+                endedSwipe = true;
+                HandleSwipeEnd();                
+                return;
+            }            
         }
 
         if (swipeTimerOn)
@@ -93,7 +98,12 @@ public class InputHandler : MonoBehaviour
             }
             else
             {
-                HandleSwipeEnd();
+                if (!endedSwipe)
+                {
+                    endedSwipe = true;
+                    HandleSwipeEnd();                    
+                    return;
+                }
             }            
         }
     }
@@ -104,6 +114,7 @@ public class InputHandler : MonoBehaviour
         IsSwiping = true;
         remainingSwipeTime = swipeMaxTime;
         swipeTimerOn = true;
+        endedSwipe = false;
 
         maxYDuringSwipe = SwipeStart.y;
         reachedPeak = false;
@@ -111,7 +122,11 @@ public class InputHandler : MonoBehaviour
 
     private void OnTouchEnd(InputAction.CallbackContext _context)
     {
-        HandleSwipeEnd();
+        if (!endedSwipe)
+        {
+            endedSwipe = true;
+            HandleSwipeEnd();            
+        }
     }
 
     private void HandleSwipeEnd()
@@ -126,6 +141,7 @@ public class InputHandler : MonoBehaviour
 
         if (_verticalSwipeLength < minSwipeThreshold) return;
 
+        Debug.Log($"normalized power è {_normalizedPower}");
         inputActions.Disable();
 
         shotManager.Shoot(DetermineShotType(_normalizedPower));
@@ -137,7 +153,7 @@ public class InputHandler : MonoBehaviour
         Vector2 _swipeDelta = SwipeEnd - SwipeStart;
         float _verticalSwipeLength = Mathf.Max(0f, _swipeDelta.y);
         if (_verticalSwipeLength < minSwipeThreshold) return 0f;
-        float _normalizedPower = Mathf.Clamp01(_verticalSwipeLength / maxSwipeHeight);
+        float _normalizedPower = Mathf.Clamp01(_verticalSwipeLength / maxSwipeHeight);        
         return _normalizedPower;
     }
 
