@@ -15,6 +15,7 @@ public class ShotPositionManager : MonoBehaviour
     [SerializeField] private GameObject MainCamera;
     [SerializeField] private ShotManager shotManager;
     [SerializeField] private UiInputBar uiInputBar;
+    [SerializeField] private AiShotPositionManager aiShotPosMan;
 
     public int _previousPos = 0;
 
@@ -26,14 +27,12 @@ public class ShotPositionManager : MonoBehaviour
     public void ChangePos()
     {
         int _currentPos = Random.Range(0, ShootingPositions.Count);
-        while (_currentPos == _previousPos)
+        while (_currentPos == _previousPos ||_currentPos == aiShotPosMan._previousPos)
         {
             _currentPos = Random.Range(0, ShootingPositions.Count);
         }
-        //MainCamera.transform.position = new Vector3(ShootingPositions[_currentPos].ShootingPosTransform.position.x, 1.9f, ShootingPositions[_currentPos].ShootingPosTransform.position.z);
-        //MainCamera.transform.rotation = ShootingPositions[_currentPos].ShootingPosTransform.rotation;
 
-        Debug.Log($"current position is {ShootingPositions[_currentPos].ShootingPosTransform.gameObject.name}");
+        //Debug.Log($"current position is {ShootingPositions[_currentPos].ShootingPosTransform.gameObject.name}");
 
         _previousPos = _currentPos;
         if (GameManager.Instance.CurrentState == GameState.Playing) uiInputBar.SetBarRanges();

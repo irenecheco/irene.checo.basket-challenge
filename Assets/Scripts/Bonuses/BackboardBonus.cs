@@ -7,9 +7,9 @@ using TMPro;
 public enum BackboardBonusType
 {
     None,
-    Common,     // +4
-    Rare,       // +6
-    VeryRare    // +8
+    Common,
+    Rare,
+    VeryRare 
 }
 
 public class BackboardBonus : MonoBehaviour
@@ -50,14 +50,12 @@ public class BackboardBonus : MonoBehaviour
     {
         while (GameManager.Instance.CurrentState != GameState.Playing) yield return null;
 
-        // Aspetta un tempo random prima di spawnare il bonus
         float waitTime = Random.Range(minTimeBetweenBonuses, maxTimeBetweenBonuses);
         yield return new WaitForSeconds(waitTime);
 
-        // Attiva bonus
         activeBonus = GetRandomBonusType();
 
-        Debug.Log($"Bonus attivo: {activeBonus}");
+        //Debug.Log($"Bonus attivo: {activeBonus}");
 
         switch(activeBonus)
         {
@@ -83,14 +81,12 @@ public class BackboardBonus : MonoBehaviour
                 break;
         }
 
-        // Resta attivo per bonusDuration secondi
         yield return new WaitForSeconds(bonusDuration);
 
         if(activeBonus != BackboardBonusType.None)
         {
-            // Rimuovi bonus
             DisableBonus();
-            Debug.Log("Bonus scaduto");
+            //Debug.Log("Bonus scaduto");
         }        
     }
 

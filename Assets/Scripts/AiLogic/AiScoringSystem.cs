@@ -47,7 +47,6 @@ public class AiScoringSystem : MonoBehaviour
             
         } else
         {
-            Debug.Log("entraQui");
             _scoreIncrease += 3;
             _perfectShot = true;
         }

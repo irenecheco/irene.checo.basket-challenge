@@ -16,7 +16,6 @@ public class ScoreDetection : MonoBehaviour
         else if(other.gameObject.tag == "AiBall")
         {
             aiScoringSystem.ComputeScoreType();
-            Debug.Log("collide");
         }
     }
 }

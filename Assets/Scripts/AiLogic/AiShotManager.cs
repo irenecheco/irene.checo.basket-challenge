@@ -21,7 +21,6 @@ public class AiShotManager : MonoBehaviour
 
     public void Shoot(ShotType _shotType)
     {
-        Debug.Log("entra in shoot");
         if (shotInProgress) return;
 
         Vector3 _targetPos = new Vector3();
@@ -37,7 +36,7 @@ public class AiShotManager : MonoBehaviour
                 break;
 
             case ShotType.Rim:
-                float rimRadius = 0.14f; // example rim radius in meters
+                float rimRadius = 0.14f;
                 Vector3 rimOffset = new Vector3(
                     Random.Range(-rimRadius, rimRadius),
                     Random.Range(-rimRadius / 2, rimRadius / 2),
@@ -54,16 +53,16 @@ public class AiShotManager : MonoBehaviour
                 );
                 }
 
-                _targetPos = basketTransform.position + rimOffset; // random rim offset
+                _targetPos = basketTransform.position + rimOffset;
                 break;
 
             case ShotType.BackboardMiss:
 
                 float xMiss = Random.value < 0.5f
                 ? Random.Range(-0.5f, -0.3f)
-                : Random.Range(0.3f, 0.5f); // either far left or far right
+                : Random.Range(0.3f, 0.5f);
 
-                float yMiss = Random.Range(0.2f, 0.4f); // always high
+                float yMiss = Random.Range(0.2f, 0.4f);
 
                 Vector3 missOffset = new Vector3(xMiss, yMiss, 0);
 
@@ -78,19 +77,17 @@ public class AiShotManager : MonoBehaviour
                 Random.Range(-1.2f, -0.6f),
                 Random.Range(-1.0f, -0.6f));
 
-                _targetPos = basketTransform.position + shortOffset; // short or side miss
+                _targetPos = basketTransform.position + shortOffset;
                 aiFireballBonus.ResetFireballBar();
                 break;
 
             case ShotType.LongMiss:
-                // offset to push shot too far
                 Vector3 longMissOffset = new Vector3(
-                    Random.Range(-0.3f, 0.3f),     // small horizontal variation
-                    Random.Range(0.3f, 0.7f),      // definitely high
-                    Random.Range(0.5f, 1f)       // definitely deep (goes past board)
+                    Random.Range(-0.3f, 0.3f),
+                    Random.Range(0.3f, 0.7f),
+                    Random.Range(0.5f, 1f)
                 );
 
-                // final target position
                 _targetPos = basketTransform.position + longMissOffset;
                 aiFireballBonus.ResetFireballBar();
                 break;
@@ -100,53 +97,31 @@ public class AiShotManager : MonoBehaviour
                 break;
         }
 
-        //Vector3 velocity = CalculateArcVelocity(currentBall.transform.position, basketTransform.position, arcHeight, Physics.gravity.magnitude);
         Vector3 velocity = CalculateVelocityFromAngle(currentBall.transform.position, _targetPos, launchAngle, Physics.gravity.magnitude);
 
-        /*Debug.Log("starts shooting");
-        float _force = _normalizedPower * maxForce;
-
-        Debug.Log($"force is {_force}");*/
         ballRb = currentBall.GetComponent<Rigidbody>();
-
-        //Vector3 _direction = (currentBall.transform.forward + currentBall.transform.up).normalized;
-        /*Vector3 _toBasket = basketTransform.position - currentBall.transform.position;
-        _toBasket.y += arcHeight; // Add some arc
-
-        Vector3 _direction = _toBasket.normalized;
-
-        Debug.Log($"direction is {_direction}");*/
 
         ballRb.isKinematic = false;
         ballRb.WakeUp();
         ballRb.velocity = velocity;
         shotInProgress = true;
-        Debug.Log($"shot in progress è {shotInProgress}");
-
-        // Delay 1 frame to ensure isKinematic = false is applied
-        //StartCoroutine(ApplyForceNextFrame(_direction * _force));
-        //StartCoroutine(ApplyForceNextFrame(velocity));
+        //Debug.Log($"shot in progress è {shotInProgress}");
     }
 
     public Vector3 CalculateVelocityFromAngle(Vector3 startPos, Vector3 targetPos, float launchAngleDegrees, float gravity)
     {
         Vector3 displacement = targetPos - startPos;
 
-        // Separate horizontal and vertical displacement
         Vector3 displacementXZ = new Vector3(displacement.x, 0, displacement.z);
         float horizontalDistance = displacementXZ.magnitude;
         float verticalDistance = displacement.y;
 
         float angleRad = launchAngleDegrees * Mathf.Deg2Rad;
-        float gravityAbs = Mathf.Abs(gravity); // usually gravity = -9.81f
+        float gravityAbs = Mathf.Abs(gravity);
 
-        // Calculate initial speed (magnitude of velocity)
-        // Using formula:
-        // V = sqrt( g * d^2 / (2 * cos^2(angle) * (d * tan(angle) - h)) )
         float numerator = gravityAbs * horizontalDistance * horizontalDistance;
         float denominator = 2 * Mathf.Pow(Mathf.Cos(angleRad), 2) * (horizontalDistance * Mathf.Tan(angleRad) - verticalDistance);
 
-        // Check denominator to avoid divide by zero or sqrt of negative
         if (denominator <= 0)
         {
             Debug.LogWarning("Impossible shot with given angle and target");
@@ -155,10 +130,8 @@ public class AiShotManager : MonoBehaviour
 
         float initialSpeed = Mathf.Sqrt(numerator / denominator);
 
-        // Direction on horizontal plane
         Vector3 horizontalDirection = displacementXZ.normalized;
 
-        // Calculate velocity components
         Vector3 velocity = horizontalDirection * initialSpeed * Mathf.Cos(angleRad);
         velocity.y = initialSpeed * Mathf.Sin(angleRad);
 
@@ -174,14 +147,12 @@ public class AiShotManager : MonoBehaviour
 
         Vector3 _reflected = Vector3.Reflect(_toRim.normalized, _backboardNormal);
 
-        // Adjust how far back you aim
-        float _depthBehindRim = -0.5f; // decrease for side shots
+        float _depthBehindRim = -0.5f;
         float _verticalOffset = 0.25f;
 
-        // Tweak lateral offset based on angle
         Vector3 _lateralOffset = Vector3.Cross(Vector3.up, _backboardNormal).normalized;
         float _sideOffset = Vector3.Dot(_toRim.normalized, _lateralOffset);
-        _lateralOffset *= _sideOffset * 0.25f; // Scale the lateral shift
+        _lateralOffset *= _sideOffset * 0.25f;
 
         Vector3 _backboardTarget = _rimPos + _reflected * _depthBehindRim + _lateralOffset;
         _backboardTarget.y = _rimPos.y + _verticalOffset;
@@ -214,7 +185,6 @@ public class AiShotManager : MonoBehaviour
                 if (!reset)
                 {
                     reset = true;
-                    Debug.Log($"entra e attiva coroutine wait and reset");
                     StartCoroutine(WaitAndReset());
                 }                
             }

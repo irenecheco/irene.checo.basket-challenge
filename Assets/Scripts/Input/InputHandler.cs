@@ -141,7 +141,7 @@ public class InputHandler : MonoBehaviour
 
         if (_verticalSwipeLength < minSwipeThreshold) return;
 
-        Debug.Log($"normalized power è {_normalizedPower}");
+        //Debug.Log($"normalized power è {_normalizedPower}");
         inputActions.Disable();
 
         shotManager.Shoot(DetermineShotType(_normalizedPower));
@@ -162,85 +162,88 @@ public class InputHandler : MonoBehaviour
         inputActions.Enable();
     }
 
+    public void DisableInputs()
+    {
+        inputActions.Disable();
+    }
+
     private ShotType DetermineShotType(float _normalizedPower)
     {
         if (shotPositionManager._previousPos <= 4) 
         {
             if (_normalizedPower < missMaxThreshold)
             {
-                Debug.Log("miss");
+                //Debug.Log("miss");
                 return ShotType.Miss;
             }
             else if (missMaxThreshold <= _normalizedPower && _normalizedPower < cleanMinThreshold)
             {
-                Debug.Log("rim");
+                //Debug.Log("rim");
                 return ShotType.Rim;
             }
             else if (cleanMinThreshold <= _normalizedPower && _normalizedPower < cleanMaxThreshold)
             {
-                Debug.Log("clean");
+                //Debug.Log("clean");
                 return ShotType.Clean;
             }
             else if (cleanMaxThreshold <= _normalizedPower && _normalizedPower < backboardMissMinThreshold)
             {
-                Debug.Log("rim");
+                //Debug.Log("rim");
                 return ShotType.Rim;
             }
             else if (backboardMissMinThreshold <= _normalizedPower && _normalizedPower < backboardMinThreshold)
             {
-                Debug.Log("backboard miss");
+                //Debug.Log("backboard miss");
                 return ShotType.BackboardMiss;
             }
             else if (backboardMinThreshold <= _normalizedPower && _normalizedPower < backboardMaxThreshold)
             {
-                Debug.Log("backboard");
+                //Debug.Log("backboard");
                 return ShotType.Backboard;
             }
             else
             {
-                Debug.Log("long miss");
+                //Debug.Log("long miss");
                 return ShotType.LongMiss;
             }
         } else
         {
             if (_normalizedPower < missMaxThresholdOut)
             {
-                Debug.Log("miss");
+                //Debug.Log("miss");
                 return ShotType.Miss;
             }
             else if (missMaxThresholdOut <= _normalizedPower && _normalizedPower < cleanMinThresholdOut)
             {
-                Debug.Log("rim");
+                //Debug.Log("rim");
                 return ShotType.Rim;
             }
             else if (cleanMinThresholdOut <= _normalizedPower && _normalizedPower < cleanMaxThresholdOut)
             {
-                Debug.Log("clean");
+                //Debug.Log("clean");
                 return ShotType.Clean;
             }
             else if (cleanMaxThresholdOut <= _normalizedPower && _normalizedPower < backboardMissMinThresholdOut)
             {
-                Debug.Log("rim");
+                //Debug.Log("rim");
                 return ShotType.Rim;
             }
             else if (backboardMissMinThresholdOut <= _normalizedPower && _normalizedPower < backboardMinThresholdOut)
             {
-                Debug.Log("backboard miss");
+                //Debug.Log("backboard miss");
                 return ShotType.BackboardMiss;
             }
             else if (backboardMinThresholdOut <= _normalizedPower && _normalizedPower < backboardMaxThresholdOut)
             {
-                Debug.Log("backboard");
+                //Debug.Log("backboard");
                 return ShotType.Backboard;
             }
             else
             {
-                Debug.Log("long miss");
+                //Debug.Log("long miss");
                 return ShotType.LongMiss;
             }
         }
                     
     }
-
-
 }

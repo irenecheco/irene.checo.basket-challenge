@@ -23,12 +23,24 @@ public class ShotManager : MonoBehaviour
     [SerializeField] private CameraFollowBall cameraFollowBall;
     [SerializeField] private FireballBonus fireballBonus;
     [SerializeField] private GameObject FireballFirePrefab;
+    [SerializeField] private GameObject GameOverCanvas;
 
     private GameObject currentBall;
     private GameObject currentFire;
     private Rigidbody ballRb;
     private bool shotInProgress = false;
     private bool reset = false;
+    private bool gameEnding = false;
+
+    private void OnEnable()
+    {
+        GameManager.Instance.EndOfTimer += EndGameTimer;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.EndOfTimer -= EndGameTimer;
+    }
 
     public void Shoot(ShotType _shotType)
     {
@@ -78,7 +90,7 @@ public class ShotManager : MonoBehaviour
 
                 Vector3 missOffset = new Vector3(xMiss, yMiss, 0);
 
-                Debug.Log($"miss offset is {missOffset}");
+                //Debug.Log($"miss offset is {missOffset}");
                 _targetPos = CalculateBackboardPos() + missOffset;
                 fireballBonus.ResetFireballBar();
                 break;
@@ -133,7 +145,7 @@ public class ShotManager : MonoBehaviour
         ballRb.WakeUp();
         ballRb.velocity = velocity;
         shotInProgress = true;
-        Debug.Log($"shot in progress è {shotInProgress}");
+        //Debug.Log($"shot in progress è {shotInProgress}");
 
         // Delay 1 frame to ensure isKinematic = false is applied
         //StartCoroutine(ApplyForceNextFrame(_direction * _force));
@@ -218,6 +230,19 @@ public class ShotManager : MonoBehaviour
         Destroy(currentFire);
     }
 
+    public void EndGameTimer()
+    {
+        gameEnding = true;
+
+        GameOverCanvas.SetActive(true);
+        GameManager.Instance.SetState(GameState.Ending);
+        if (!shotInProgress)
+        {
+            inputHandler.DisableInputs();
+        }
+        StartCoroutine(WaitToEndGame());
+    }
+
     void Update()
     {
         if(shotInProgress && currentBall != null)
@@ -227,7 +252,6 @@ public class ShotManager : MonoBehaviour
                 if (!reset)
                 {
                     reset = true;
-                    Debug.Log($"entra e attiva coroutine wait and reset");
                     StartCoroutine(WaitAndReset());
                 }                
             }
@@ -240,9 +264,21 @@ public class ShotManager : MonoBehaviour
         Destroy(currentBall);
         currentBall = null;
         shotInProgress = false;
-        inputHandler.ResetInputs();
 
-        scoringSystem.ResetBall();
-        reset = false;
+        if (!gameEnding)
+        {
+            inputHandler.ResetInputs();
+
+            scoringSystem.ResetBall();
+            reset = false;
+        }
+        
+    }
+
+    private IEnumerator WaitToEndGame()
+    {
+        yield return new WaitForSeconds(2f);
+
+        GameManager.Instance.EndGame();
     }
 }

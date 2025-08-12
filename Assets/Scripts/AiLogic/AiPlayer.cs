@@ -6,16 +6,18 @@ public class AiPlayer : MonoBehaviour
 {
     [SerializeField] private AiShotManager aiShotManager;
     [SerializeField] private float timeBetweenShots = 2.5f;
-    [SerializeField, Range(0f, .7f)] private float accuracy = .7f;// 70% clean
-    [SerializeField] private float backboardProb = 0.15f;    // +15%
-    [SerializeField] private float rimProb = 0.05f;          // +5%
+    [SerializeField] private float backboardProb = 0.15f;
+    [SerializeField] private float rimProb = 0.05f;
 
-    [SerializeField] private float missProb = 0.05f;       // 5%
-    [SerializeField] private float backboardMissProb = 0.03f;        // 3%
-    [SerializeField] private float longMissProb = 0.02f;   // 2%
+    [SerializeField] private float missProb = 0.05f;
+    [SerializeField] private float backboardMissProb = 0.03f;
+    //[SerializeField] private float longMissProb = 0.02f;
+
+    public float accuracy = .3f;
 
     void Start()
     {
+        accuracy = GameManager.Instance.AiAccuracy;
         StartCoroutine(AIPlayLoop());
     }
 
@@ -33,14 +35,13 @@ public class AiPlayer : MonoBehaviour
             ShotType shotType = DecideShotType();
 
             aiShotManager.Shoot(shotType);
-            Debug.Log($"shot type è {shotType}");
+            //Debug.Log($"shot type è {shotType}");
         }
     }
 
     private ShotType DecideShotType()
     {
-        float roll = Random.value; // 0..1
-        Debug.Log($"calcola shot type e roll è {roll}");
+        float roll = Random.value;
 
         if (roll <= accuracy) return ShotType.Clean;
         else if (roll <= accuracy + backboardProb) return ShotType.Backboard;
