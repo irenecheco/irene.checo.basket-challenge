@@ -466,6 +466,7 @@ MonoBehaviour:
   FillImg: {fileID: 410509399}
   FireballColor: {fileID: 1639316318}
   fireballDuration: 10
+  shotManager: {fileID: 1622449967}
 --- !u!224 &117993117
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1886,6 +1887,150 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 528599645}
   m_CullTransparentMesh: 1
+--- !u!1 &575411785
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 575411789}
+  - component: {fileID: 575411788}
+  - component: {fileID: 575411787}
+  - component: {fileID: 575411786}
+  - component: {fileID: 575411790}
+  - component: {fileID: 575411791}
+  m_Layer: 0
+  m_Name: AiPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &575411786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 575411785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56a44d117cf5f9b48a98dde87e212218, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShootingPositions:
+  - ShootingPosTransform: {fileID: 958729484}
+    MaxForce: 5.5
+  - ShootingPosTransform: {fileID: 810209353}
+    MaxForce: 5.7
+  - ShootingPosTransform: {fileID: 27379300}
+    MaxForce: 5.3
+  - ShootingPosTransform: {fileID: 462226863}
+    MaxForce: 5.7
+  - ShootingPosTransform: {fileID: 1131669741}
+    MaxForce: 5.5
+  - ShootingPosTransform: {fileID: 584428415}
+    MaxForce: 7.2
+  - ShootingPosTransform: {fileID: 576266039}
+    MaxForce: 7.4
+  - ShootingPosTransform: {fileID: 171041158}
+    MaxForce: 7
+  - ShootingPosTransform: {fileID: 1951000984}
+    MaxForce: 7.4
+  - ShootingPosTransform: {fileID: 582234183}
+    MaxForce: 7.2
+  aiShotManager: {fileID: 575411787}
+  shotPosMan: {fileID: 1845288192}
+  _previousPos: 0
+--- !u!114 &575411787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 575411785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79ae64c80001c0e4f983dd2a191271ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aiBallPrefab: {fileID: 2685296331310878914, guid: 194af1a887f1e584ca693435b6b0ddb4, type: 3}
+  aiBallPosition: {fileID: 1675560394}
+  aiShotPosMan: {fileID: 575411786}
+  basketTransform: {fileID: 2026044866}
+  launchAngle: 65
+  aiScoringSystem: {fileID: 575411790}
+  aiFireballBonus: {fileID: 575411791}
+  FireballFirePrefab: {fileID: 943897321082708319, guid: fb13ce629c8cfdf4497222483abf413c, type: 3}
+--- !u!114 &575411788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 575411785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a28432a7c745d142aa8c7e066391a74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aiShotManager: {fileID: 575411787}
+  timeBetweenShots: 4
+  accuracy: 0.65
+  backboardProb: 0.15
+  rimProb: 0.05
+  missProb: 0.05
+  backboardMissProb: 0.03
+  longMissProb: 0.02
+--- !u!4 &575411789
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 575411785}
+  m_LocalRotation: {x: -0.034025546, y: 0.22226392, z: 0.0077616465, w: 0.9743617}
+  m_LocalPosition: {x: -3.25, y: 1.9, z: 12.46}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1675560394}
+  m_Father: {fileID: 0}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: -4, y: 25.7, z: 0}
+--- !u!114 &575411790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 575411785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45d004618760ab8439aebdeabc1f88dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aiShotPositionManager: {fileID: 575411786}
+  aiScoreText: {fileID: 487566594}
+  fireballBonus: {fileID: 575411791}
+--- !u!114 &575411791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 575411785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebb8bd8776c8ff3459ffe5c0eb16b57e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  perfectShotIncrease: 0.4
+  normalShotIncrease: 0.25
+  fireballDuration: 10
+  shotManager: {fileID: 575411787}
 --- !u!1 &576266038
 GameObject:
   m_ObjectHideFlags: 0
@@ -3445,6 +3590,7 @@ MonoBehaviour:
   score: {fileID: 627904818}
   inputBarCanvas: {fileID: 211482000}
   fireballBonus: {fileID: 117993115}
+  aiPlayer: {fileID: 575411785}
   countdownObj: {fileID: 512990562}
   countdownText: {fileID: 1463395628}
   inputHandler: {fileID: 104972846}
@@ -3986,13 +4132,12 @@ MonoBehaviour:
   ballPrefab: {fileID: 6503207864218077156, guid: d7bd13296878bb140bb35715313f40d9, type: 3}
   ballPosition: {fileID: 697046246}
   basketTransform: {fileID: 2026044866}
-  backboardTransform: {fileID: 479689836}
-  arcHeight: 2.5
   launchAngle: 65
   scoringSystem: {fileID: 1480200723}
   inputHandler: {fileID: 104972846}
   cameraFollowBall: {fileID: 963194230}
   fireballBonus: {fileID: 117993116}
+  FireballFirePrefab: {fileID: 943897321082708319, guid: fb13ce629c8cfdf4497222483abf413c, type: 3}
 --- !u!4 &1622449968
 Transform:
   m_ObjectHideFlags: 0
@@ -4084,6 +4229,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1639316318}
   m_CullTransparentMesh: 1
+--- !u!1 &1675560393
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1675560394}
+  m_Layer: 0
+  m_Name: AiBallPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1675560394
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1675560393}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.25, z: 1.19}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 575411789}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1709945538
 GameObject:
   m_ObjectHideFlags: 0
@@ -4661,6 +4837,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoringSystem: {fileID: 1480200723}
+  aiScoringSystem: {fileID: 575411790}
 --- !u!1 &2006374707
 GameObject:
   m_ObjectHideFlags: 0
@@ -5260,6 +5437,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoringSystem: {fileID: 1480200723}
+  aiScoringSystem: {fileID: 575411790}
 --- !u!33 &3504134613402360839
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5815,6 +5993,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoringSystem: {fileID: 1480200723}
+  aiScoringSystem: {fileID: 575411790}
 --- !u!33 &6788564608157973906
 MeshFilter:
   m_ObjectHideFlags: 0

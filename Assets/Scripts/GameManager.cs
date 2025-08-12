@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
 
     public float GameTimer;
     public float FinalScore;
+    public float AiFinalScore;
 
     private void Awake()
     {
