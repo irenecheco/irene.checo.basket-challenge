@@ -56,6 +56,7 @@ public class FireballBonus : MonoBehaviour
         FireballImg.color = ActiveColor;
         FireballColor.SetActive(true);
         shotManager.StartFire();
+        GetComponent<AudioSource>().Play();
         StartCoroutine(StartTimer());
     }
 

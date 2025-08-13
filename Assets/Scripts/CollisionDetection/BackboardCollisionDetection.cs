@@ -12,6 +12,7 @@ public class BackboardCollisionDetection : MonoBehaviour
         if (collision.collider.tag == "Ball")
         {
             scoringSystem.UpdateTouchBackboard();
+            GetComponent<AudioSource>().Play();
         } 
         else if(collision.collider.tag == "AiBall")
         {

@@ -57,8 +57,14 @@ public class GameManager : MonoBehaviour
     {
         GameTimer -= Time.deltaTime;
 
+        if(GameTimer > 6.2f && GameTimer <6.5f)
+        {
+            GetComponent<AudioSource>().Play();
+        }
+
         if (GameTimer <= 0f)
         {
+            GetComponent<AudioSource>().Stop();
             EndOfTimer?.Invoke();
         }
     }

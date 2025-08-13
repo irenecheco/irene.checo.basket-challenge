@@ -12,6 +12,7 @@ public class RimCollisionDetection : MonoBehaviour
         if(collision.collider.tag == "Ball")
         {
             scoringSystem.UpdateTouchRim();
+            GetComponent<AudioSource>().Play();
         }
         else if (collision.collider.tag == "AiBall")
         {

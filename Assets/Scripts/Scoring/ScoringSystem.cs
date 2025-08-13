@@ -74,6 +74,7 @@ public class ScoringSystem : MonoBehaviour
                         bonusText.color = backboardBonusColor;
                         shotParticle.Play();
                         backboardBonusParticle.Play();
+                        GetComponent<AudioSource>().Play();
                         StartCoroutine(WaitAndDisableBonus());
                         break;
                     case BackboardBonusType.Rare:
@@ -84,6 +85,7 @@ public class ScoringSystem : MonoBehaviour
                         bonusText.color = backboardBonusColor;
                         shotParticle.Play();
                         backboardBonusParticle.Play();
+                        GetComponent<AudioSource>().Play();
                         StartCoroutine(WaitAndDisableBonus());
                         break;
                     case BackboardBonusType.VeryRare:
@@ -94,6 +96,7 @@ public class ScoringSystem : MonoBehaviour
                         bonusText.color = backboardBonusColor;
                         shotParticle.Play();
                         backboardBonusParticle.Play();
+                        GetComponent<AudioSource>().Play();
                         StartCoroutine(WaitAndDisableBonus());
                         break;
                     default:
@@ -121,6 +124,7 @@ public class ScoringSystem : MonoBehaviour
             pointsText.color = perfectShotColor;
             bonusText.color = perfectShotColor;
             perfectShotParticle.Play();
+            GetComponent<AudioSource>().Play();
         }
         if (fireballBonus.FireballActive) _scoreIncrease *= 2;
         sessionScore += _scoreIncrease;

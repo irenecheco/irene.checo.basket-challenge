@@ -12,6 +12,7 @@ public class ScoreDetection : MonoBehaviour
         if(other.gameObject.tag == "Ball")
         {
             scoringSystem.ComputeScoreType();
+            GetComponent<AudioSource>().Play();
         }
         else if(other.gameObject.tag == "AiBall")
         {

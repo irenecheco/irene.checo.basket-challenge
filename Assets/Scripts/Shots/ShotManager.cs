@@ -24,6 +24,7 @@ public class ShotManager : MonoBehaviour
     [SerializeField] private FireballBonus fireballBonus;
     [SerializeField] private GameObject FireballFirePrefab;
     [SerializeField] private GameObject GameOverCanvas;
+    [SerializeField] private AudioSource beepAudioSource;
 
     private GameObject currentBall;
     private GameObject currentFire;
@@ -144,6 +145,7 @@ public class ShotManager : MonoBehaviour
         ballRb.isKinematic = false;
         ballRb.WakeUp();
         ballRb.velocity = velocity;
+        GetComponent<AudioSource>().Play();
         shotInProgress = true;
         //Debug.Log($"shot in progress è {shotInProgress}");
 
@@ -240,6 +242,7 @@ public class ShotManager : MonoBehaviour
         {
             inputHandler.DisableInputs();
         }
+        beepAudioSource.Play();
         StartCoroutine(WaitToEndGame());
     }
 

@@ -38,13 +38,20 @@ public class CountdownManager : MonoBehaviour
     private IEnumerator StartCountdown()
     {
         float _countdown = countdownTime;
+        GetComponent<AudioSource>().Play();
+        int _previousSeconds = 0;
 
-        while(_countdown >= 0)
+        while (_countdown > 0)
         {
             _countdown -= Time.deltaTime;
-            int seconds = Mathf.FloorToInt(_countdown % 60f);
+            int _seconds = Mathf.FloorToInt(_countdown % 60f);
+            if(_previousSeconds != _seconds && _seconds!= -1)
+            {
+                GetComponent<AudioSource>().Play();
+                _previousSeconds = _seconds;
+            }
 
-            countdownText.text = string.Format("{0:0}", seconds+1);
+            countdownText.text = string.Format("{0:0}", _seconds+1);
             yield return null;
         }
 
