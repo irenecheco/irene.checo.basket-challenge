@@ -32,6 +32,7 @@ public class InputHandler : MonoBehaviour
     [SerializeField] private float swipeMaxTime = 2f;
     [SerializeField] private TextMeshProUGUI debugText;
     [SerializeField] private UiInputBar inputBar;
+    [SerializeField] private GameObject trail;
 
     public Vector2 SwipeStart { get; private set; }
     public Vector2 SwipeEnd { get; private set; }
@@ -45,12 +46,15 @@ public class InputHandler : MonoBehaviour
     private float maxYDuringSwipe;
     private bool reachedPeak;
     private bool endedSwipe = false;
+    private Coroutine trailCoroutine;
+    private Camera mainCamera;
 
     private void Awake()
     {
         inputActions = new PlayerInputActions();
         maxSwipeHeight = Screen.height * maxSwipeHeightRatio;
         minSwipeThreshold = Screen.height * minSwipeHeightRatio;
+        mainCamera = Camera.main;
     }
 
     private void OnEnable()
@@ -115,6 +119,10 @@ public class InputHandler : MonoBehaviour
         remainingSwipeTime = swipeMaxTime;
         swipeTimerOn = true;
         endedSwipe = false;
+        trail.SetActive(true);
+        Debug.Log($"trail is active {trail.activeSelf}");
+        trail.transform.position = ScreenToWorldPos(mainCamera, SwipeStart);
+        trailCoroutine = StartCoroutine(Trail());
 
         maxYDuringSwipe = SwipeStart.y;
         reachedPeak = false;
@@ -127,6 +135,9 @@ public class InputHandler : MonoBehaviour
             endedSwipe = true;
             HandleSwipeEnd();            
         }
+        StopCoroutine(trailCoroutine);
+        trail.SetActive(false);
+        Debug.Log($"trail is active {trail.activeSelf}");
     }
 
     private void HandleSwipeEnd()
@@ -245,5 +256,19 @@ public class InputHandler : MonoBehaviour
             }
         }
                     
+    }
+    public Vector3 ScreenToWorldPos(Camera camera, Vector3 position)
+    {
+        position.z = camera.nearClipPlane + .1f;
+        return camera.ScreenToWorldPoint(position);
+    }
+    private IEnumerator Trail()
+    {
+        while (true)
+        {
+            trail.transform.position = ScreenToWorldPos(mainCamera, inputActions.Player.TouchPosition.ReadValue<Vector2>());
+
+            yield return null;
+        }
     }
 }

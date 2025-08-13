@@ -28,7 +28,7 @@ public class ShotManager : MonoBehaviour
     private GameObject currentBall;
     private GameObject currentFire;
     private Rigidbody ballRb;
-    private bool shotInProgress = false;
+    public bool shotInProgress { get; private set; } = false;
     private bool reset = false;
     private bool gameEnding = false;
 

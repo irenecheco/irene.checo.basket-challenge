@@ -18,6 +18,9 @@ public class ScoringSystem : MonoBehaviour
     [SerializeField] private TextMeshProUGUI pointsText;
     [SerializeField] private TextMeshProUGUI bonusText;
     [SerializeField] private GameObject feedbackCanvas;
+    [SerializeField] private ParticleSystem shotParticle;
+    [SerializeField] private ParticleSystem perfectShotParticle;
+    [SerializeField] private ParticleSystem backboardBonusParticle;
     private bool rimTouched = false;
     private bool backboardTouched = false;
     private bool scored = false;
@@ -61,6 +64,7 @@ public class ScoringSystem : MonoBehaviour
                         bonusText.text = "";
                         pointsText.color = normalShotColor;
                         bonusText.color = normalShotColor;
+                        shotParticle.Play();
                         break;
                     case BackboardBonusType.Common:
                         _scoreIncrease += 4;
@@ -68,7 +72,9 @@ public class ScoringSystem : MonoBehaviour
                         bonusText.text = "Backboard bonus!";
                         pointsText.color = backboardBonusColor;
                         bonusText.color = backboardBonusColor;
-                        backboardBonus.DisableBonus();
+                        shotParticle.Play();
+                        backboardBonusParticle.Play();
+                        StartCoroutine(WaitAndDisableBonus());
                         break;
                     case BackboardBonusType.Rare:
                         _scoreIncrease += 6;
@@ -76,7 +82,9 @@ public class ScoringSystem : MonoBehaviour
                         bonusText.text = "Backboard bonus!";
                         pointsText.color = backboardBonusColor;
                         bonusText.color = backboardBonusColor;
-                        backboardBonus.DisableBonus();
+                        shotParticle.Play();
+                        backboardBonusParticle.Play();
+                        StartCoroutine(WaitAndDisableBonus());
                         break;
                     case BackboardBonusType.VeryRare:
                         _scoreIncrease += 8;
@@ -84,13 +92,16 @@ public class ScoringSystem : MonoBehaviour
                         bonusText.text = "Backboard bonus!";
                         pointsText.color = backboardBonusColor;
                         bonusText.color = backboardBonusColor;
-                        backboardBonus.DisableBonus();
+                        shotParticle.Play();
+                        backboardBonusParticle.Play();
+                        StartCoroutine(WaitAndDisableBonus());
                         break;
                     default:
                         _scoreIncrease += 2;
                         bonusText.text = "";
                         pointsText.color = normalShotColor;
                         bonusText.color = normalShotColor;
+                        shotParticle.Play();
                         break;
                 }
             } else
@@ -99,6 +110,7 @@ public class ScoringSystem : MonoBehaviour
                 bonusText.text = "";
                 pointsText.color = normalShotColor;
                 bonusText.color = normalShotColor;
+                shotParticle.Play();
             }            
             
         } else
@@ -108,6 +120,7 @@ public class ScoringSystem : MonoBehaviour
             bonusText.text = "Perfect shot!";
             pointsText.color = perfectShotColor;
             bonusText.color = perfectShotColor;
+            perfectShotParticle.Play();
         }
         if (fireballBonus.FireballActive) _scoreIncrease *= 2;
         sessionScore += _scoreIncrease;
@@ -133,6 +146,13 @@ public class ScoringSystem : MonoBehaviour
         backboardTouched = false;
         scored = false;
         inputBar.SetForce(0f);
+    }
+
+    private IEnumerator WaitAndDisableBonus()
+    {
+        yield return new WaitForSeconds(backboardBonusParticle.main.duration);
+
+        backboardBonus.DisableBonus();
     }
 
 }

@@ -28,6 +28,7 @@ public class BackboardBonus : MonoBehaviour
     [SerializeField] private Image backboardBorder;
     [SerializeField] private TextMeshProUGUI backboardPointsText;
     [SerializeField] private GameObject backboardCanvas;
+    [SerializeField] private ShotManager shotManager;
 
     public BackboardBonusType activeBonus = BackboardBonusType.None;
 
@@ -52,6 +53,8 @@ public class BackboardBonus : MonoBehaviour
 
         float waitTime = Random.Range(minTimeBetweenBonuses, maxTimeBetweenBonuses);
         yield return new WaitForSeconds(waitTime);
+
+        while (shotManager.shotInProgress) yield return null;
 
         activeBonus = GetRandomBonusType();
 
