@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class AiPlayer : MonoBehaviour
 {
+    #region Serialized Fields
+    [Header("References")]
     [SerializeField] private AiShotManager aiShotManager;
+
+    [Header("Timing")]
     [SerializeField] private float timeBetweenShots = 2.5f;
+
+    [Header("Shot Probabilities")]
     [SerializeField] private float backboardProb = 0.15f;
     [SerializeField] private float rimProb = 0.05f;
-
     [SerializeField] private float missProb = 0.05f;
     [SerializeField] private float backboardMissProb = 0.03f;
-    //[SerializeField] private float longMissProb = 0.02f;
+    #endregion
 
     public float accuracy = .3f;
 
@@ -21,6 +26,7 @@ public class AiPlayer : MonoBehaviour
         StartCoroutine(AIPlayLoop());
     }
 
+    #region AI Logic
     private IEnumerator AIPlayLoop()
     {
         while(GameManager.Instance.CurrentState != GameState.Playing)
@@ -35,7 +41,6 @@ public class AiPlayer : MonoBehaviour
             ShotType shotType = DecideShotType();
 
             aiShotManager.Shoot(shotType);
-            //Debug.Log($"shot type è {shotType}");
         }
     }
 
@@ -50,4 +55,5 @@ public class AiPlayer : MonoBehaviour
         else if (roll <= accuracy + backboardProb + rimProb + missProb + backboardMissProb) return ShotType.BackboardMiss;
         else return ShotType.LongMiss;
     }
+    #endregion
 }

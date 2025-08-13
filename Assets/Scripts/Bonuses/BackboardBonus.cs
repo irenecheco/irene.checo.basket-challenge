@@ -14,21 +14,28 @@ public enum BackboardBonusType
 
 public class BackboardBonus : MonoBehaviour
 {
+    #region Serialized Fields
+    [Header("Timing Settings")]
     [SerializeField] float minTimeBetweenBonuses = 20f;
     [SerializeField] float maxTimeBetweenBonuses = 45f;
     [SerializeField] float bonusDuration = 10f;
 
+    [Header("Bonus Settings")]
     [SerializeField] private int commonPoints = 4;
     [SerializeField] private Color commonColor;
     [SerializeField] private int rarePoints = 6;
     [SerializeField] private Color rareColor;
     [SerializeField] private int veryRarePoints = 8;
-    [SerializeField] private Color veryRareColor;    
+    [SerializeField] private Color veryRareColor;
 
+    [Header("UI References")]
     [SerializeField] private Image backboardBorder;
     [SerializeField] private TextMeshProUGUI backboardPointsText;
     [SerializeField] private GameObject backboardCanvas;
+
+    [Header("Game References")]
     [SerializeField] private ShotManager shotManager;
+    #endregion
 
     public BackboardBonusType activeBonus = BackboardBonusType.None;
 
@@ -37,6 +44,7 @@ public class BackboardBonus : MonoBehaviour
         StartCoroutine(BonusRoutine());
     }
 
+    #region Bonus Logic
     public void DisableBonus()
     {
         if (activeBonus == BackboardBonusType.None) return;
@@ -57,8 +65,6 @@ public class BackboardBonus : MonoBehaviour
         while (shotManager.shotInProgress) yield return null;
 
         activeBonus = GetRandomBonusType();
-
-        //Debug.Log($"Bonus attivo: {activeBonus}");
 
         switch(activeBonus)
         {
@@ -89,7 +95,6 @@ public class BackboardBonus : MonoBehaviour
         if(activeBonus != BackboardBonusType.None)
         {
             DisableBonus();
-            //Debug.Log("Bonus scaduto");
         }        
     }
 
@@ -100,4 +105,5 @@ public class BackboardBonus : MonoBehaviour
         if (r < 0.8f) return BackboardBonusType.Rare;        // 30%
         return BackboardBonusType.VeryRare;                  // 20%
     }
+    #endregion
 }

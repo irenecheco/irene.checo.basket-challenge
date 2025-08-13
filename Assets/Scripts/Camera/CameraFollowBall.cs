@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class CameraFollowBall : MonoBehaviour
 {
+    #region Serialized Fields
     [SerializeField] private float extraHeight = 1.5f;
     [SerializeField] private float followSpeed = .5f;
     [SerializeField] private float followDuration = 1f; // total follow time
     [SerializeField] private float easeOutStart = 0.6f; // when to start slowing down
     [SerializeField] private Transform hoopPos;
+    #endregion
 
     public Transform Ball;
 

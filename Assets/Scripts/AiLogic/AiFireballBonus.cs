@@ -3,17 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Handle fireball bonus for ai opponent
 public class AiFireballBonus : MonoBehaviour
 {
+    #region Serialized Fields
+    [Header("Fireball Charge Settings")]
     [SerializeField, Range(0f, 1f)] private float perfectShotIncrease = .4f;
     [SerializeField, Range(0f, 1f)] private float normalShotIncrease = .25f;
+
+    [Header("Fireball Settings")]
     [SerializeField] private float fireballDuration = 10f;
     [SerializeField] private AiShotManager shotManager;
+    #endregion
 
+    #region Variables
     public bool FireballActive { get; private set; } = false;
 
     private float fireballCharge = 0f;
     private float chargeDecayRate = 0.015f;
+    #endregion
 
     private void Update()
     {
@@ -21,6 +29,7 @@ public class AiFireballBonus : MonoBehaviour
             fireballCharge = Mathf.Max(0f, fireballCharge - chargeDecayRate * Time.deltaTime);
     }
 
+    #region Fireball Logic
     public void UpdateFireballBar(bool _perfectShot)
     {
         if (!FireballActive)
@@ -54,7 +63,9 @@ public class AiFireballBonus : MonoBehaviour
         fireballCharge = 0;
         shotManager.EndFire();
     }
+    #endregion
 
+    #region Timer Logic
     private IEnumerator StartTimer()
     {
         float _fireballTimer = fireballDuration;
@@ -68,4 +79,5 @@ public class AiFireballBonus : MonoBehaviour
 
         ResetFireballBar();
     }
+    #endregion
 }

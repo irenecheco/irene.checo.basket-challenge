@@ -5,16 +5,23 @@ using UnityEngine.UI;
 
 public class FireballBonus : MonoBehaviour
 {
+    #region Serialized Fields
+    [Header("Charge Settings")]
     [SerializeField, Range(0f, 1f)] private float perfectShotIncrease = .4f;
     [SerializeField, Range(0f, 1f)] private float normalShotIncrease = .25f;
+
+    [Header("UI References")]
     [SerializeField] private Color InactiveColor;
     [SerializeField] private Color ActiveColor;
     [SerializeField] private Image BarBg;
     [SerializeField] private Image FireballImg;
     [SerializeField] private Image FillImg;
     [SerializeField] private GameObject FireballColor;
+
+    [Header("Fireball Settings")]
     [SerializeField] private float fireballDuration = 10f;
     [SerializeField] private ShotManager shotManager;
+    #endregion
 
     public bool FireballActive { get; private set; } = false;
 

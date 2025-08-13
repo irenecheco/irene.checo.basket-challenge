@@ -6,20 +6,26 @@ using TMPro;
 
 public class AiScoringSystem : MonoBehaviour
 {
+    #region Serialized Fields
+    [Header("References")]
     [SerializeField] private AiShotPositionManager aiShotPositionManager;
     [SerializeField] private TextMeshProUGUI aiScoreText;
     [SerializeField] private AiFireballBonus fireballBonus;
+    #endregion
 
+    #region Variables
     private bool rimTouched = false;
     private bool backboardTouched = false;
     private bool scored = false;
     private int sessionScore = 0;
+    #endregion
 
     private void Start()
     {
         aiScoreText.text = sessionScore.ToString();
     }
 
+    #region Scoring Logic for ai
     public void UpdateTouchRim()
     {
         if (!rimTouched)
@@ -71,5 +77,5 @@ public class AiScoringSystem : MonoBehaviour
         backboardTouched = false;
         scored = false;
     }
-
+    #endregion
 }
